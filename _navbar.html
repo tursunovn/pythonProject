@@ -22,8 +22,8 @@
                 </li>
             </ul>
             <ul class="navbar-nav">
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Поиск..." aria-label="Search">
+                <form class="d-flex" method="get" action="{% url 'search_results' %}">
+                    <input name="q" class="form-control me-2" type="search" placeholder="Поиск..." aria-label="Search">
                     <button class="btn btn-outline-primary" type="submit">Найти</button>
                 </form>
                 <li class="nav-item">
