@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect
 from .models import Article, Category
+from django.urls import reverse_lazy
+
 # Create your views here.
-from .forms import ArticleForm
+from .forms import ArticleForm, LoginForm
 from django.views.generic import ListView, CreateView, DetailView, DeleteView, UpdateView
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
@@ -57,6 +61,7 @@ def add_article(request):
 
     return render(request, 'blog/article_form.html', context)
 
+
 class ArticleList(ListView):
     model = Article
     context_object_name = 'articles'
@@ -66,12 +71,13 @@ class ArticleList(ListView):
     }
 
     def get_queryset(self):
-        return Article.objects.filter(is_published = True)
+        return Article.objects.filter(is_published=True)
+
 
 class ArticleListByCategory(ArticleList):
     def get_queryset(self):
         return Article.objects.filter(
-            category_id=self.kwargs['pk'], is_published = True
+            category_id=self.kwargs['pk'], is_published=True
         )
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -80,11 +86,12 @@ class ArticleListByCategory(ArticleList):
         context['title'] = f'Категория: {category.title}'
         return context
 
+
 class ArticleDetail(DetailView):
     model = Article
 
     def get_queryset(self):
-        return Article.objects.filter(pk=self.kwargs['pk'], is_published =True)
+        return Article.objects.filter(pk=self.kwargs['pk'], is_published=True)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
@@ -95,7 +102,6 @@ class ArticleDetail(DetailView):
         return context
 
 
-
 class NewArticle(CreateView):
     form_class = ArticleForm
     template_name = 'blog/article_form.html'
@@ -103,13 +109,50 @@ class NewArticle(CreateView):
         'title': 'Добавить статью'
     }
 
+
 class SearchResults(ArticleList):
     def get_queryset(self):
         word = self.request.GET.get('q')
         articles = Article.objects.filter(title__icontains=word)
         return articles
 
+
 class ArticleUpdate(UpdateView):
     model = Article
     form_class = ArticleForm
     template_name = 'blog/article_form.html'
+
+
+class ArticleDelete(DeleteView):
+    model = Article
+    success_url = reverse_lazy('index')
+    context_object_name = 'article'
+
+
+def profile(request):
+    return render(request, 'blog/profile.html', {'title': 'Ваша страница'})
+
+
+def user_login(request):
+    if request.method == 'POST':
+        form = LoginForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            if user:
+                login(request, user)
+                return redirect('index')
+    else:
+        form = LoginForm()
+
+    context = {
+        'title': 'Авторизация пользователья',
+        'form': form
+    }
+
+    return render(request, 'blog/user_login.html', context)
+
+
+
+def user_logout(request):
+    logout(request)
+    return redirect('index')
