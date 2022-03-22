@@ -13,7 +13,19 @@
     </label> {{ form.username }}
     <label for="{{ form.password_id_for_label }}">
         Пароль
-    </label> {{ form.password }}
+    </label> {{ form.password }} <input type="checkbox" class="form-check-input" id="box" onclick="reveal()">
+      <script type="text/javascript">
+    function reveal()
+    {
+      if(document.getElementById('box').checked)
+      {
+        document.getElementById('id_password').type='text';
+      }
+      else
+        document.getElementById('id_password').type='password';
+    }
+  </script>
+
 
     <button class="btn btn-primary">Войти</button>
 

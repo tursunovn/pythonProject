@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{title}}
+{% endblock title %}
+
+{% block main %}
+<form action="" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <script type="text/javascript">
+    function reveal()
+    {
+      if(document.getElementById('box').checked)
+      {
+        document.getElementById('id_password1').type='text';
+      }
+      else
+        document.getElementById('id_password1').type='password';
+    }
+  </script>
+  <input type="checkbox" id="box" onclick="reveal()">
+  <button class ="btn btn-primary">Регистрация</button>
+
+</form>
+
+
+{% endblock main %}
