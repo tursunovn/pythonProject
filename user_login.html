@@ -5,6 +5,10 @@
 
 {% endblock title %}
 {% block main %}
+
+<div class="d-flex justify-content-center mx-auto">
+    <div class="col-4 card p-2">
+
 <form action="" method="post">
     {% csrf_token %}
 
@@ -13,8 +17,17 @@
     </label> {{ form.username }}
     <label for="{{ form.password_id_for_label }}">
         Пароль
-    </label> {{ form.password }} <input type="checkbox" class="form-check-input" id="box" onclick="reveal()">
-      <script type="text/javascript">
+
+    </label>
+
+    <input type="password" name="password" class="form-control" requiered="required" id="id_password">
+    <div class="d-flex justify-content-between">
+        <div>
+            <input type="checkbox" class="form-check-input" id="box" onclick="reveal()"> Показать пароль
+        </div>
+    <button class="btn btn-primary mt-2">Войти</button>
+    </div>
+    <script type="text/javascript">
     function reveal()
     {
       if(document.getElementById('box').checked)
@@ -27,7 +40,7 @@
   </script>
 
 
-    <button class="btn btn-primary">Войти</button>
-
 </form>
+        </div>
+</div>
 {% endblock main %}
