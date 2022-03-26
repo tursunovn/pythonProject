@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+{% block main %}
+<div class="card">
+    <div class="card-header">
+        {{ article.category }}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ article.title }}</h5>
+
+        <div class="d-flex gap-3">
+            <div class="card-photo">
+                {% if article.photo %}
+                <img src="{{ article.photo.url }}" width="300" alt="">
+                {% else %}
+                <img src="https://static9.depositphotos.com/1011646/1236/i/450/depositphotos_12369509-stock-photo-breaking-news-screen.jpg"
+                     width="300" alt="">
+                {% endif %}
+            </div>
+            <p class="card-text">{{ article.content| linebreaks }}</p>
+        </div>
+        <p class="card-text">Дата создания: {{ article.created_at }}</p>
+        <p class="card-text">Автор: {{ article.author.username }}</p>
+
+    </div>
+
+    {% if request.user == article.author %}
+    <div>
+        <a href="{% url 'article_update' article.pk %}" class="btn btn-warning">Изменить</a>
+        <a href="{% url 'article_delete' article.pk %}" class="btn btn-danger">Удалить</a>
+    </div>
+    {% endif %}
+</div>
+
+
+{% if request.user.is_authenticated %}
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ comment_form.text }}
+
+    <button class="btn btn-primary" type="submit">Оставить комментарии</button>
+
+</form>
+{% endif %}
+
+<h2> Вам также могут понравится</h2>
+<div>
+    <div class="row">
+    {% for article in articles %}
+        <div class="col-3">
+    {% include 'blog/components/_card.html'%}
+        </div>
+    {% endfor %}
+    </div>
+</div>
+
+{% endblock main  %}
