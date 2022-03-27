@@ -50,7 +50,7 @@ from django.contrib.auth.models import User
 
 class Comment(models.Model):
     text = models.TextField(verbose_name='Комментарии')
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, verbose_name='Статья')
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, verbose_name='Статья', related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор')
     created_at = models.DateField(auto_now_add=True, verbose_name='Дата создания')
 
